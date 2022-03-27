@@ -14,6 +14,12 @@ This is a group project for INT2211 4 class - Database.
 
 # Functionality
 
+## Database Design
+
+**_DISCLAIMER: This ER-diagram is subject to change, and should not be used as a representation of what the actual database looks like._**
+
+![diagram.png](docs/diagram.png)
+
 ## Finished
 
 ## To-do
