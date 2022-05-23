@@ -10,7 +10,7 @@ export default function Register (){
     return(
         <div className='Register'>
         <h1> SignUp</h1>
-        <input name = "username" value={userInfo.username} onChange={setUserInfo} />
+        <input name = "username" value={userInfo.username} onChange={setUserInfo} />    
         <input name = "password" value={userInfo.password} onChange={setUserInfo} />
         <input name = "firstName" value={userInfo.firstName} onChange={setUserInfo} />
         <input name = "lastName" value={userInfo.lastName} onChange={setUserInfo} />
