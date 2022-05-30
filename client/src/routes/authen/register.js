@@ -4,8 +4,18 @@ import Axios from 'axios';
 export default function Register (){
     const [userInfo, setUserInfo] = useForm({username:'', password:'',firstName:'',lastName:'',phoneNumber:'',age:1,country:'',customerID:20});
     
-    const signUp = () =>{
-        Axios.post("http://localhost:5000/register",userInfo).then(respond => alert(respond.data));
+    const signUp = async () =>{
+        await Axios.post("http://localhost:5000/register",userInfo).then(respond => {
+            localStorage.setItem("user",JSON.stringify(respond.data));
+            Axios.post("http://localhost:5000/getuser",{customerID:respond.data.customerID}).then(respond1 =>{
+                localStorage.setItem("profile",JSON.stringify(respond1.data))
+            }).catch(e=>{
+                console.log(e);
+            });
+        }).catch(e=>{
+            console.log(e);
+        });
+        
     }
     return(
         <div className='Register'>

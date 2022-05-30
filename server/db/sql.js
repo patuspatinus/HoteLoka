@@ -7,9 +7,9 @@ const pool = mysql.createPool({
     multipleStatements: true
 });
 let Sql_query = {};
-Sql_query.register = (customerID,firstName,lastName,age,phoneNumber,country,username,password)=>{
+Sql_query.register = (firstName,lastName,age,phoneNumber,country,username,password)=>{
     return new Promise((res,rej)=>{
-        pool.query('INSERT INTO `customer` (`customerID`, `firstName`, `lastName`, `age`, `phoneNumber`, `country`) VALUES (?, ?, ?, ?, ?, ?);INSERT INTO `account` (`username`, `password`, `customerID`, `Wallet`) VALUES (?, ?, ?, 0);',[customerID,firstName,lastName,age,phoneNumber,country,username,password,customerID],(err,result)=>{
+        pool.query('INSERT INTO `customer` ( `firstName`, `lastName`, `age`, `phoneNumber`, `country`) VALUES(?,?,?,?,?);Set @lid = (select LAST_INSERT_ID());  INSERT INTO `account` (`username`, `password` , `Wallet`, `customerID`) VALUES (?, ?, 0, @lid);',[firstName,lastName,age,phoneNumber,country,username,password],(err,result)=>{
             if(err){
                 return rej(err);
             }
@@ -27,12 +27,44 @@ Sql_query.login = (username, password)=>{
         });
     });
 };
-Sql_query.getList = (location)=>{
+Sql_query.getByLocaltion = (location) =>{
     return new Promise((res,rej)=>{
         pool.query("SELECT * FROM `hotel` WHERE hotelLocation LIKE CONCAT('%',?,'%')",[location],(err,result)=>{
             if(err) return rej(err);
             else return res(result);
-        })
+        })  
     })
+}
+Sql_query.getList = (hotelID, date, timeStaying)=>{
+    return new Promise((res,rej)=>{
+        pool.query("SELECT * FROM room r WHERE r.roomID NOT IN ( SELECT (SELECT bd.roomID FROM bookingdetails bd WHERE b.bookingID = bd.bookingID) as RoomID FROM booking b WHERE (DATEDIFF(?, DATE_ADD(b.bookTime, INTERVAL b.timeStaying DAY)) <= 0) AND (DATEDIFF(DATE_ADD(?, INTERVAL ? DAY), b.bookTime) >= 0) HAVING hotelID = ?) AND r.hotelID IN ( SELECT (SELECT r.hotelID FROM room r WHERE r.roomID = (SELECT bd.roomID FROM bookingdetails bd WHERE b.bookingID = bd.bookingID)) as HotelID FROM booking b WHERE (DATEDIFF(?, DATE_ADD(b.bookTime, INTERVAL b.timeStaying DAY)) <= 0) AND (DATEDIFF(DATE_ADD(?, INTERVAL ? DAY), b.bookTime) >= 0) HAVING hotelID = ?);",[date,date,timeStaying,hotelID,date,date,timeStaying,hotelID],(err,result)=>{
+            if(err) return rej(err);
+            else return res(result);
+        })
+    }) 
 };
+Sql_query.booking = (roomID, customerID, bookTime, timeStaying) =>{
+    return new Promise((res,rej)=>{
+        pool.query("INSERT INTO `booking` ( `customerID`, `bookTime`, `timeStaying`) VALUES(?,?,?);Set @lid = (select LAST_INSERT_ID());  INSERT INTO `bookingdetails` (`bookingID`, `roomID` ,`customerRating`) VALUES (@lid,?,0);",[customerID,bookTime,timeStaying,roomID],(err,result)=>{
+            if(err) return rej(err);
+            else return res(result);
+        });
+    })
+}
+Sql_query.getProfile = (customerID)=>{
+    return new Promise((res,rej)=>{
+        pool.query("SELECT * FROM `customer` WHERE customerID = ?",[customerID],(err,result)=>{
+            if(err) return rej(err);
+            else return res(result);
+        });
+    })
+}
+Sql_query.addPayment = (date, amount, customerID)=>{
+    return new Promise((res,rej)=>{
+        pool.query("INSERT INTO `payment` (`paymentDate`, `amount`, `customerID`) VALUES(?,?,?);",[date,amount,customerID],(err,result)=>{
+            if(err) return rej(err);
+            else return res(result);
+        });
+    })
+}
 module.exports = Sql_query;
