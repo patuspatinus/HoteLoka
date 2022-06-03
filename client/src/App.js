@@ -15,9 +15,9 @@ function App() {
         <Route path = "/" element = {<Login/>} />
         <Route path = "/register" element = {<Register/>}/>
         <Route path = "/gethotels" element = {<Home/>}/>
-        <Route path = "filter" element = {<Filter/>}/>
+        <Route path = "/filter" element = {<Filter/>}/>
         <Route path = "/list" element = {<List/>}/>
-        <Route path = "profile" element ={<Profile/>}/>
+        <Route path = "/profile" element ={<Profile/>}/>
       </Routes>
     </Router>
   );

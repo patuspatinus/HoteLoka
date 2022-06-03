@@ -15,8 +15,7 @@ import "react-date-range/dist/theme/default.css"; // theme css file
 import { format } from "date-fns";
 import { useNavigate } from "react-router-dom";
 import Axios from "axios";
-const Header = () => {
-  const[type,setType] = useState("");
+const Header = ({type}) => {
   const [destination, setDestination] = useState("");
   const [openDate, setOpenDate] = useState(false);
   const [date, setDate] = useState([
@@ -31,11 +30,12 @@ const Header = () => {
 
   const handleSearch = async () => {
     //console.log(destination);
-   // let res = await Axios.post("http://localhost:5000/filter",{location:destination});
+    let res = await Axios.post("http://localhost:5000/filter",{location:destination});
+    localStorage.setItem("destination",JSON.stringify(res.data));
     //setDestination(res.data);
     //const bla = res.data;
    // console.log(destination);
-    navigate("/list", { state: { destination, date} });
+    navigate("/filter", { state: {date} });
   };
 
   return (
@@ -45,6 +45,9 @@ const Header = () => {
           type === "list" ? "headerContainer listMode" : "headerContainer"
         }
       >
+        <div className="headerList">
+        <p>The best </p>
+        </div>
         <div className="headerList">
           <div className="headerListItem active">
             <FontAwesomeIcon icon={faBed} />

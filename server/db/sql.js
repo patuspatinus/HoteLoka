@@ -37,7 +37,7 @@ Sql_query.getByLocaltion = (location) =>{
 }
 Sql_query.getList = (hotelID, date, timeStaying)=>{
     return new Promise((res,rej)=>{
-        pool.query("SELECT * FROM room r WHERE r.roomID NOT IN ( SELECT (SELECT bd.roomID FROM bookingdetails bd WHERE b.bookingID = bd.bookingID) as RoomID FROM booking b WHERE (DATEDIFF(?, DATE_ADD(b.bookTime, INTERVAL b.timeStaying DAY)) <= 0) AND (DATEDIFF(DATE_ADD(?, INTERVAL ? DAY), b.bookTime) >= 0) HAVING hotelID = ?) AND r.hotelID IN ( SELECT (SELECT r.hotelID FROM room r WHERE r.roomID = (SELECT bd.roomID FROM bookingdetails bd WHERE b.bookingID = bd.bookingID)) as HotelID FROM booking b WHERE (DATEDIFF(?, DATE_ADD(b.bookTime, INTERVAL b.timeStaying DAY)) <= 0) AND (DATEDIFF(DATE_ADD(?, INTERVAL ? DAY), b.bookTime) >= 0) HAVING hotelID = ?);",[date,date,timeStaying,hotelID,date,date,timeStaying,hotelID],(err,result)=>{
+        pool.query("SELECT * FROM room r WHERE r.roomID NOT IN ( SELECT (SELECT bd.roomID FROM bookingdetails bd WHERE b.bookingID = bd.bookingID) as RoomID FROM booking b WHERE (DATEDIFF(?, DATE_ADD(b.bookTime, INTERVAL b.timeStaying DAY)) <= 0) AND (DATEDIFF(DATE_ADD(?, INTERVAL ? DAY), b.bookTime) >= 0)) AND r.hotelID = ?;",[date,date,timeStaying,hotelID],(err,result)=>{
             if(err) return rej(err);
             else return res(result);
         })

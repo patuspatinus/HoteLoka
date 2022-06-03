@@ -16,9 +16,7 @@ route.post('/login',async (req, res) =>{
 });
 route.post('/filter', async (req,res)=>{
     try{  
-        console.log(req.body);
         let result = await db.getByLocaltion(req.body.location);
-        console.log(result);
         if(typeof result !== 'undefined') res.json(result);
         else res.send('Error');
     }
@@ -29,7 +27,6 @@ route.post('/filter', async (req,res)=>{
 })
 route.post('/list',async (req,res)=>{
     try{ 
-        console.log(req.body);
         let result = await db.getList(req.body.hotelID,req.body.date,req.body.timeStaying);
         if(typeof result !== 'undefined') res.send(result);
         else res.send('Error');
