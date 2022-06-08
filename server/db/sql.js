@@ -12,7 +12,7 @@ Sql_query.register = (firstName,lastName,age,phoneNumber,country,username,passwo
         pool.query('INSERT INTO `customer` ( `firstName`, `lastName`, `age`, `phoneNumber`, `country`) VALUES(?,?,?,?,?);Set @lid = (select LAST_INSERT_ID());  INSERT INTO `account` (`username`, `password` , `Wallet`, `customerID`) VALUES (?, ?, 0, @lid);',[firstName,lastName,age,phoneNumber,country,username,password],(err,result)=>{
             if(err){
                 return rej(err);
-            }
+            } 
             return res(result);
         })
     })
@@ -65,6 +65,14 @@ Sql_query.addPayment = (date, amount, customerID)=>{
             if(err) return rej(err);
             else return res(result);
         });
+    })
+}
+Sql_query.getPaymentHistory = (customerID) =>{
+    return new Promise((res,rej)=>{
+        pool.query("SELECT * from payment where customerID = ?",[customerID],(err,result)=>{
+            if(err) return rej(err);
+            else return res(result);
+        })
     })
 }
 module.exports = Sql_query;

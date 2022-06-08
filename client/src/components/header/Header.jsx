@@ -24,18 +24,16 @@ const Header = ({ type }) => {
             key: "selection",
         },
     ]);
-    //type="list";
     const navigate = useNavigate();
-
+    const logOut = () => {
+        localStorage.clear();
+        navigate("/");
+    }
     const handleSearch = async () => {
-        //console.log(destination);
         let res = await Axios.post("http://localhost:5000/filter", {
             location: destination,
         });
         localStorage.setItem("destination", JSON.stringify(res.data));
-        //setDestination(res.data);
-        //const bla = res.data;
-        // console.log(destination);
         navigate("/filter", { state: { date } });
     };
 
@@ -49,7 +47,7 @@ const Header = ({ type }) => {
                 }
             >
                 <div className="headerList">
-                    <p>The best </p>
+                    <p>Since our developer is busy grinding for mmr, you can only search hotels from "Da Nang" and "Kien Giang" </p>
                 </div>
                 <div className="headerList">
                     <div className="headerListItem active">
@@ -75,10 +73,8 @@ const Header = ({ type }) => {
                 </div>
                 {type !== "list" && (
                     <>
-                        <h1 className="headerTitle">Bla bla</h1>
-                        <h1 className="headerTitle">Bla bla</h1>
-                        <button className="headerBtn">
-                            Sign in / Register
+                        <button className="headerBtn" onClick = {logOut}>
+                            Log Out
                         </button>
                         <div className="headerSearch">
                             <div className="headerSearchItem">

@@ -2,12 +2,10 @@ import Axios from "axios";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import "./searchItem.css";
 import moment from "moment";
-import { useState } from "react";
 
 const SearchItem = ({ item }) => {
     const navigate = useNavigate();
     const location = useLocation();
-    const [booked, setBooked] = useState(false);
     const dates = location.state.date;
     const MILLISECONDS_PER_DAY = 1000 * 60 * 60 * 24;
     function dayDifference(date1, date2) {
@@ -46,8 +44,10 @@ const SearchItem = ({ item }) => {
 
         const user = JSON.parse(localStorage.getItem("user"));
         Axios.post("http://localhost:5000/bookroom", { customerID: user.customerID, roomID: item.roomID, bookTime: moment(dates[0].startDate).format('YYYY-MM-DD'), timeStaying: days }).then(respond => {
-            alert("Success");
-            window.location.replace("http://localhost:3000/gethotels");
+            Axios.post("http://localhost:5000/addpayment",{customerID: user.customerID, amount: item.roomPrice*days, date: moment(dates[0].startDate).format('YYYY-MM-DD')}).then(()=>{
+                alert("Success");
+                navigate("/profile");
+            })
         })
     }
     return (
