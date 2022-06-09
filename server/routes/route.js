@@ -91,5 +91,15 @@ route.post('/addpayment',async (req,res)=>{
         res.sendStatus(500);
     }
 })
+route.post('/addmoney',async (req,res)=>{
+    try{
+        let result = await db.addmoney(req.body.amount,req.body.customerID);
+        if(typeof result !== 'undefined') res.json(result);
+        else res.send('Something went wrong');
+    }
+    catch(e){
+        console.log(e);
+        res.sendStatus(500);
+    }
+})
 module.exports = route;
-

@@ -10,6 +10,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { useNavigate } from "react-router-dom";
+import FormDialog from "../../components/formDialog/Dialog";
 export default function Profile (){
     const navigate = useNavigate();
     const user = JSON.parse(localStorage.getItem("user"));
@@ -64,6 +65,8 @@ export default function Profile (){
                             profile.country}
                             <br />
                             <span className="phone">{profile.phoneNumber}</span>
+                            <br />
+                            <span className="phone">Currently has {parseInt(user.wallet)} VND in wallet</span>
                         </p>
                         </div>
                     </div>
@@ -101,7 +104,10 @@ export default function Profile (){
                      <p style={{ marginTop: '2rem' }}>You haven't done anything homie.</p>
                 )}
                 <br></br>
-            <button onClick={()=>{navigate("/gethotels")}} className="lButton"> Book Now!!</button>
+            <div>
+                <button onClick={()=>{navigate("/gethotels")}} className="lButton"> Book Now!!</button>
+                <FormDialog />
+            </div>      
         </div>
     )
  }

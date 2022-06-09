@@ -1,9 +1,9 @@
 const mysql = require('mysql');
 const pool = mysql.createPool({
-    host:'localhost',
-    user:'root',
-    database: 'hypertravel',
-    port: 3306,
+    host:'us-cdbr-east-05.cleardb.net',
+    user:'bbd4b755f6a2cc',
+    database: 'heroku_1904eff09043173',
+    password: '1621b744',
     multipleStatements: true
 });
 let Sql_query = {};
@@ -70,6 +70,14 @@ Sql_query.addPayment = (date, amount, customerID)=>{
 Sql_query.getPaymentHistory = (customerID) =>{
     return new Promise((res,rej)=>{
         pool.query("SELECT * from payment where customerID = ?",[customerID],(err,result)=>{
+            if(err) return rej(err);
+            else return res(result);
+        })
+    })
+}
+Sql_query.addmoney = (amount,customerID) =>{
+    return new Promise((res,rej)=>{
+        pool.query("UPDATE `account` SET `wallet` = `wallet` + ? WHERE `account`.`customerID` = ?;",[amount,customerID],(err,result)=>{
             if(err) return rej(err);
             else return res(result);
         })
